@@ -24,7 +24,7 @@ public class Client {
             do{
                 socket.receive(packet); //阻塞
                 // System.err.println("Rcv:" + new String(packet.getData()));
-                fos.write(packet.getData(), 0, 64);
+                fos.write(packet.getData(), 0, packet.getLength());
                 count++;
             }while(packet.getData()[0] != 0);
     

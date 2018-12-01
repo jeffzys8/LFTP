@@ -71,3 +71,16 @@
 
 暂时没想到其他需要的；<br>
 完成了协议的简单定义以后，今天下一个任务是 **实现udp的发送接收**
+
+# 12-1 
+
+今日的第一个目标是按照指令格式实现udp版本的上传和下载文件。
+
+- 发送文件: `java Client lsend myserver mylargefile`
+- 接收文件: `java Client lget myserver mylargefile`
+- 约定Server的监听端口为6060
+
+主要难点:
+
+- Client、Server寻找可用端口
+- IP地址解析
