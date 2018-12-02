@@ -31,7 +31,6 @@ public class Server {
             catch(Exception e){
                 sendError("Fail to accept client's requst.");
             }
-            // 新建一个线程，传递Handler对象对传输进行处理
             System.out.println("New request: " + listen_packet.getAddress().toString() + ":" + listen_packet.getPort());
 
             // 获取可用端口，启动socket
@@ -47,7 +46,9 @@ public class Server {
                 break;
             }
 
-            // 新建线程进行处理
+            // 这里需要建立三次握手连接，因为服务器需要新建端口处理，所以应该由server主动连接
+
+            // 分情况进行处理
             Thread thread = new Thread(new SendHandler(socket, "local.txt"));
             thread.start();
             
