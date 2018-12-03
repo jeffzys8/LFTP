@@ -15,12 +15,14 @@ public class ReceiveHandler implements Runnable{
     String filename;
     InetAddress dstAddr;
     int dstPort;
+    int startSEQ;
 
-    ReceiveHandler(DatagramSocket socket, String filename, InetAddress dstAddr, int dstPort){
+    ReceiveHandler(DatagramSocket socket, String filename, InetAddress dstAddr, int dstPort, int seq){
         this.socket = socket;
         this.filename = filename;
         this.dstAddr = dstAddr;
         this.dstPort = dstPort;
+        this.startSEQ = seq;
     }
 
     public void sendError(String msg){

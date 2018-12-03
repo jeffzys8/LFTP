@@ -17,6 +17,19 @@ public class Utils{
         System.out.println("    Doawnload a file: lget [serverName] [fileName]");
     }
 
+    public static int min3(int a, int b, int c){
+        if(a < b && a < c)
+            return a;
+        else if(b < c)
+            return b;
+        else
+            return c;
+    }
+    
+    public static int min2(int a, int b){
+        return a < b ? a : b;
+    }
+
     public static byte[] intToBytes( int value ) 
 	{ 
 		byte[] src = new byte[4];
@@ -78,6 +91,10 @@ public class Utils{
 
     public static int GetACK(byte[] src){
         return bytesToInt(src, HEADER_ACK);
+    }
+
+    public static int GetWindow(byte[] src){
+        return bytesToInt(src, HEADER_WINDOW);
     }
 
     public static void SetDataSize(byte[] src, int size){

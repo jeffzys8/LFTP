@@ -85,10 +85,10 @@ class Handler implements Runnable{
             break;
         }
 
-        /* first handshake - 获取Request的指令 */
+        /* first handshake - 获取Request的指令, 初始SEQ值 */
         byte[] packetData = client_request;
         int command = packetData[Utils.HEADER_COMMAND];
-        int seq = Utils.GetSeq(packetData);
+        int startSEQ = Utils.GetSeq(packetData);
         int fnSize = Utils.bytesToInt(packetData, Utils.HEADER_DATASIZE); //获取数据长度(这里是文件名)
         String fileName = new String(Utils.getPartialBytes(packetData, Utils.HEADER_DATA, Utils.HEADER_DATA+fnSize-1));
 
@@ -121,11 +121,11 @@ class Handler implements Runnable{
         /* 连接建立，新建线程进行处理(和client正好是相反的) */
         Thread thread;
         if(command == COMMAND_GET){
-            thread = new Thread(new SendHandler(socket, fileName, client_address, client_port));
+            thread = new Thread(new SendHandler(socket, fileName, client_address, client_port, startSEQ));
         }
         else{
             
-            thread = new Thread(new ReceiveHandler(socket, fileName, client_address, client_port));
+            thread = new Thread(new ReceiveHandler(socket, fileName, client_address, client_port, startSEQ));
         }
         thread.start();
     }

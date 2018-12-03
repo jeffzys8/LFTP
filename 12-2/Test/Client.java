@@ -69,7 +69,9 @@ public class Client {
         
         byte[] requestData = new byte[Utils.HEADER_DATASIZE + Utils.HEADER_DATA];
         Utils.SetCommand(requestData, command); //分别用b11和b111代表GET和SEND
-        Utils.SetSeq(requestData, port*10); //初始Seq#.设置为client_port*10
+        Random random = new Random();
+        int startSEQ = random.nextInt(10000)+1000;
+        Utils.SetSeq(requestData, startSEQ); //初始Seq#.设置为1000-14999的随机值
         Utils.SetDataSize(requestData, fileName.length());
         Utils.SetData(requestData, fileName.getBytes());
         packet = new DatagramPacket(requestData, requestData.length, serverAddr, SERVER_PORT);
@@ -98,10 +100,10 @@ public class Client {
         /* 连接确认，根据指令设置handler并进行新开线程进行处理 （需要设置定时器） */
         Thread thread;
         if(command == COMMAND_GET){
-            thread = new Thread(new ReceiveHandler(socket, fileName, serverAddr, SERVER_PORT));
+            thread = new Thread(new ReceiveHandler(socket, fileName, serverAddr, SERVER_PORT, startSEQ));
         }
         else{
-            thread = new Thread(new SendHandler(socket, fileName,serverAddr, SERVER_PORT));
+            thread = new Thread(new SendHandler(socket, fileName,serverAddr, SERVER_PORT, startSEQ));
         }
         thread.start();
     }

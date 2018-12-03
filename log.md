@@ -124,6 +124,28 @@ LFTP和TCP存在着这样的差异：TCP是面向连接的，在同一条连接�
 - 每次读满一个缓冲区，然后使用GBN协议将缓冲区内数据全部传完；然后再读满，再传；循环这个过程直到文件被读完。
 - 每个seq应为 初始seq + 对应缓冲区byte #.
 
+# 12-3
+
+在`ReceiveHandler`编写GBN：
+
+- [x] 增加`rwind, cwind`，
+- [x] `window = min{rwind, cwind}`
+- [x] `packet = min{MTU, window, RemainedBufferData}`, 
+- [x] 在发送文件时增加 接收ACK线程
+- [ ] 在发送文件时增加 Timer线程 (使用`Thread.interrupt`进行计时器更新) (超时时间暂定为1s)
+- [ ] 在发数据之前对变量进行更新：检测有无超时, 是否收到了新ACK
+- [x] 暂定MTU为 `5KB`, IO缓冲区(发送方)暂定为 `100KB` (也即每次读文件的数量)
+
+在`SendHandler`编写GBN：
+
+其他:
+
+- [x] 关于SEQ、ACK的计数，应留意它应是一个环，所以需要在`Utils`内定义相关函数进行操作
+    - Seq/Ack 的取值范围是 `[rand, rand+1023]`
+    - 初始rand SEQ是在第一次握手的时候由Client产生发给Server
+- [ ] Seq计数仍然存在着问题；暂时用int不考虑循环了(毕竟有4G呢)
+- [ ] 在握手时设置rwind的初始值
+
 <hr>
 三次握手的原因：
 
