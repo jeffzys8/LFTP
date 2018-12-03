@@ -77,8 +77,8 @@ public class ReceiveHandler implements Runnable{
             while(!end){
                 socket.receive(packet);
                 int recv_seq = Utils.GetSeq(packet.getData());
-                int data_size = Utils.GetDataSize(packet.GetData());
-                byte[] data = Utils.getPartialBytes(packet.getData(), Utils.HEADER_DATA, HEADER_DATA + data_size - 1);
+                int data_size = Utils.GetDataSize(packet.getData());
+                byte[] data = Utils.getPartialBytes(packet.getData(), Utils.HEADER_DATA, Utils.HEADER_DATA + data_size - 1);
                 if(recv_seq == ack){    //正好是所需要的包, 写入缓存, 发对应ACK
                     if(buffer_end + data_size <= BUFFER_SIZE){ //超出缓存空间会默认被丢弃
                         Utils.BytesInsertByte(buffer, data, buffer_end);
