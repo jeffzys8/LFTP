@@ -126,7 +126,7 @@ LFTP和TCP存在着这样的差异：TCP是面向连接的，在同一条连接�
 
 # 12-3
 
-在`ReceiveHandler`编写GBN：
+在`SendHandler`编写GBN：
 
 - [x] 增加`rwind, cwind`，
 - [x] `window = min{rwind, cwind}`
@@ -137,10 +137,14 @@ LFTP和TCP存在着这样的差异：TCP是面向连接的，在同一条连接�
 - [x] 暂定MTU为 `5KB`, IO缓冲区(发送方)暂定为 `100KB` (也即每次读文件的数量)
 - [ ] 传输结束标志为 `SEQ=200`
 
-在`SendHandler`编写GBN：
+在`ReceiveHandler`编写GBN：
 
-- [ ] 循环使用buffer数组读写
-- [ ] 新建线程对接收数据
+- [x] 取消循环使用buffer数组读写,也采用一次缓冲区读完再刷新的策略
+- [ ] 新建线程处理写文件, 另一线程用来处理read socket, 主线程用来ack.
+- [ ] 缓冲区满会死锁, 需要在 IO线程内读完后给主线程刷新缓存区的指令!
+- [ ] 未考虑某个包既有确认了的部分, 也有未确认的部分
+
+> 本以为`ReceiveHandler`会很简单,没想到它的异步问题很麻烦! 生产者消费者模型, 还可能死锁!
 
 其他:
 

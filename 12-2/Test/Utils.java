@@ -97,6 +97,14 @@ public class Utils{
         return bytesToInt(src, HEADER_WINDOW);
     }
 
+    public static int GetDataSize(byte[] src){
+        return bytesToInt(src, HEADER_DATASIZE);
+    }
+
+    public static void SetWindow(byte[] src, int window){
+        BytesInsertInt(src, window, HEADER_WINDOW);
+    }
+
     public static void SetDataSize(byte[] src, int size){
         BytesInsertInt(src, size, HEADER_DATASIZE);
     }

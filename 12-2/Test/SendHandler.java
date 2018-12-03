@@ -52,7 +52,7 @@ public class SendHandler implements Runnable{
 
             //每次读满一个缓冲区，然后使用GBN协议将缓冲区内数据全部传完；然后再读满，再传；循环这个过程直到文件被读完。
 
-            // System.out.println("开始发送文件("+filename+")至: " + dstAddr.toString() + ":" + dstPort);
+            System.out.println("开始发送文件("+filename+")至: " + dstAddr.toString() + ":" + dstPort);
 
             int bufferLength = 0;
             while ((bufferLength = fis.read(bs)) != -1) {
@@ -68,7 +68,7 @@ public class SendHandler implements Runnable{
 
                 // 开始将这一条缓冲区里的内容全部发出并ACK
                 while(bfpt_tosend_seq != bufferLength){
-                    //在发数据之前对变量进行更新：检测有无超时(处理重发), 是否收到了新ACK
+                    // 检查是否收到了新ACK,并作出相应处理
                     rwind = myAckRecver.rwind;
                     if(myAckRecver.largestACK > waitingSEQ){
                         // 收到新的ACK,更新数据并检查Timer是关闭还是重置
@@ -85,6 +85,12 @@ public class SendHandler implements Runnable{
                         }
                     }
 
+                    // 检查是否超时, 是的话Go back n
+                    if(myTimer.timesup){
+                        // 将即将发送的SEQ回退到最早需要ACK的位置
+                        tosendSEQ = waitingSEQ;
+                        bfpt_tosend_seq = bfpt_waiting_seq;
+                    }
 
                     // 本次发包的长度
                     int toSendSize = Utils.min3(
@@ -113,8 +119,7 @@ public class SendHandler implements Runnable{
                     bfpt_tosend_seq += toSendSize;
                 }
             }
-            // System.out.println("发送至" + dstAddr.toString() + ":" + dstPort + "完成。总共发送包:" + count);
-
+            System.out.println("发送至" + dstAddr.toString() + ":" + dstPort + "完成.");
             fis.close();
 
             // 发送传输结束信号, 把SEQ设置为200
