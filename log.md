@@ -132,11 +132,15 @@ LFTP和TCP存在着这样的差异：TCP是面向连接的，在同一条连接�
 - [x] `window = min{rwind, cwind}`
 - [x] `packet = min{MTU, window, RemainedBufferData}`, 
 - [x] 在发送文件时增加 接收ACK线程
-- [ ] 在发送文件时增加 Timer线程 (使用`Thread.interrupt`进行计时器更新) (超时时间暂定为1s)
-- [ ] 在发数据之前对变量进行更新：检测有无超时, 是否收到了新ACK
+- [x] 在发送文件时增加 Timer线程 (使用`Thread.interrupt`进行计时器更新) (超时时间暂定为1s)
+- [x] 在发数据之前对变量进行更新：检测有无超时, 是否收到了新ACK
 - [x] 暂定MTU为 `5KB`, IO缓冲区(发送方)暂定为 `100KB` (也即每次读文件的数量)
+- [ ] 传输结束标志为 `SEQ=200`
 
 在`SendHandler`编写GBN：
+
+- [ ] 循环使用buffer数组读写
+- [ ] 新建线程对接收数据
 
 其他:
 

@@ -117,7 +117,7 @@ public class SendHandler implements Runnable{
 
             fis.close();
 
-            //发送传输结束信号
+            // 发送传输结束信号, 把SEQ设置为200
             byte[] end = {0};
             packet.setData(end);
             socket.send(packet);
