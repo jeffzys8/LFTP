@@ -86,6 +86,7 @@ class Handler implements Runnable{
         }
 
         /* first handshake - 获取Request的指令, 初始SEQ值 */
+        System.out.println("debug1");
         byte[] packetData = client_request;
         int command = packetData[Utils.HEADER_COMMAND];
         int startSEQ = Utils.GetSeq(packetData);
@@ -94,6 +95,7 @@ class Handler implements Runnable{
 
         /* second handshake - 向Client发送反馈 (需在send后启动定时器) */
         packetData = new byte[128];
+        System.out.println("debug2");
         if(command == 3){   //Client请求下载
             // 检测文件是否存在
             File tempFile = new File(fileName);

@@ -66,15 +66,14 @@ public class Client {
 
         
         /* 向服务器发送请求 - fisrt handshake (需要设置定时器) */
-        
-        byte[] requestData = new byte[Utils.HEADER_DATASIZE + Utils.HEADER_DATA];
-        Utils.SetCommand(requestData, command); //分别用b11和b111代表GET和SEND
+        packet = new DatagramPacket(new byte[Utils.HEADER_DATASIZE + Utils.HEADER_DATA], Utils.HEADER_DATASIZE + Utils.HEADER_DATA, serverAddr, SERVER_PORT);
+        Utils.SetCommand(packet.getData(), command); //分别用b11和b111代表GET和SEND
         Random random = new Random();
         int startSEQ = random.nextInt(10000)+1000;
-        Utils.SetSeq(requestData, startSEQ); //初始Seq#.设置为1000-14999的随机值
-        Utils.SetDataSize(requestData, fileName.length());
-        Utils.SetData(requestData, fileName.getBytes());
-        packet = new DatagramPacket(requestData, requestData.length, serverAddr, SERVER_PORT);
+        Utils.SetSeq(packet.getData(), startSEQ); //初始Seq#.设置为1000-14999的随机值
+        Utils.SetDataSize(packet.getData(), fileName.length());
+        Utils.SetData(packet.getData(), fileName.getBytes());
+        
 
         try{socket.send(packet);}
         catch(Exception e){
@@ -82,7 +81,7 @@ public class Client {
         }
 
         /* 接收服务器回传的请求 - second handshake */
-        packet.setLength(128);
+        
         try{socket.receive(packet);}
         catch(Exception e){
             Utils.sendError("Unknown socket error.");
@@ -91,7 +90,9 @@ public class Client {
         
 
         /* 客户端再次确认 - third handshake */
-        packet = new DatagramPacket("200".getBytes(), 128, serverAddr, transPort);
+        packet.setData("200".getBytes());
+        packet.setAddress(serverAddr);
+        packet.setPort(transPort);
         try{socket.send(packet);}
         catch(Exception e){
             Utils.sendError("Unknown socket error.");

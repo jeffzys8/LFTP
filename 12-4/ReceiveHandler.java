@@ -8,8 +8,9 @@ import java.util.*;
 public class ReceiveHandler implements Runnable{
 
     final static int BUFFER_SIZE = 512 * 1024; //接收缓冲区大小, 为了实验效果, 将其设为 SendHandler的发送缓冲区的一半
-
-    DatagramPacket packet = new DatagramPacket(new byte[128],128);
+    final static int MAX_SEG_SIZE = 1024; //最大传输单元 (暂定为1KB) 
+    
+    DatagramPacket packet = new DatagramPacket(new byte[MAX_SEG_SIZE+64],MAX_SEG_SIZE+64);
     DatagramSocket socket;
     String filename;
     InetAddress dstAddr;
