@@ -1,6 +1,7 @@
 # LFTP
 
-> 代码仓库可见于 https://github.com/zys980808/tcp_by_udp
+> 代码仓库可见于 https://github.com/zys980808/tcp_by_udp 
+> **移步仓库查看最新版**
 
 LFTP协议是使用UDP套接字实现的大文件可靠传输协议，它属于应用层协议。该协议在本项目中绑定到一个CS架构的文件传输应用当中。最终的项目源码见于 `LFTP/src` 文件夹中。
 
